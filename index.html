@@ -47,7 +47,6 @@
             margin-bottom: 40px;
         }
 
-        /* Countdown Style */
         .countdown { display: flex; justify-content: center; gap: 10px; margin: 30px 0; }
         .time-box {
             background: var(--dark-text);
@@ -95,7 +94,7 @@
 <body>
 
     <div id="music-control" onclick="toggleMusic()">🎵</div>
-    <audio id="mySong" loop>
+    <audio id="mySong" loop preload="auto">
         <source src="tenten-palawara.mp3" type="audio/mpeg">
     </audio>
 
@@ -115,7 +114,7 @@
                 <div class="time-box"><span id="minutes">0</span><small>Menit</small></div>
                 <div class="time-box"><span id="seconds">0</span><small>Detik</small></div>
             </div>
-            <p style="font-size: 0.9rem; color: #666;">Sampai acara dimulai pada 14 Mei 2026, 09:00 WITA</p>
+            <p style="font-size: 0.9rem; color: #666;">Sampai acara dimulai pada 14 Mei 2026, 14:00 WITA</p>
         </div>
 
         <div class="card">
@@ -123,7 +122,7 @@
             <p><strong>Kediaman Keluarga</strong><br>
             Jalan Sanggar Agung No. 1<br>
             Jimbaran, Kuta Selatan, Bali</p>
-            <a href="https://www.google.com/maps/search/?api=1&query=Jalan+Sanggar+Agung+No.+1+Jimbaran" 
+            <a href="http://googleusercontent.com/maps.google.com/search?q=Jalan+Sanggar+Agung+No.+1+Jimbaran" 
                target="_blank" class="btn">Buka di Google Maps</a>
         </div>
     </div>
@@ -133,27 +132,23 @@
     </footer>
 
     <script>
-        // TARGET TANGGAL: 14 Mei 2026 jam 09:00:00
-        const countDownDate = new Date("May 14, 2026 09:00:00").getTime();
+        // TARGET WAKTU: 14 Mei 2026 jam 14:00:00
+        const countDownDate = new Date("May 14, 2026 14:00:00").getTime();
 
-        // Update hitungan setiap 1 detik
         const x = setInterval(function() {
             const now = new Date().getTime();
             const distance = countDownDate - now;
 
-            // Perhitungan waktu untuk hari, jam, menit dan detik
             const days = Math.floor(distance / (1000 * 60 * 60 * 24));
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // Tampilkan hasil ke elemen dengan id terkait
-            document.getElementById("days").innerHTML = days;
-            document.getElementById("hours").innerHTML = hours;
-            document.getElementById("minutes").innerHTML = minutes;
-            document.getElementById("seconds").innerHTML = seconds;
+            document.getElementById("days").innerHTML = Math.max(0, days);
+            document.getElementById("hours").innerHTML = Math.max(0, hours);
+            document.getElementById("minutes").innerHTML = Math.max(0, minutes);
+            document.getElementById("seconds").innerHTML = Math.max(0, seconds);
 
-            // Jika hitungan mundur selesai
             if (distance < 0) {
                 clearInterval(x);
                 document.getElementById("timer").innerHTML = "<h3>Acara Sedang Berlangsung</h3>";
@@ -168,7 +163,9 @@
                 song.pause(); 
                 document.getElementById("music-control").innerText = "🔇"; 
             } else { 
-                song.play().catch(e => console.log("Interaksi diperlukan"));
+                song.play().catch(e => {
+                    console.log("Audio diblokir browser, butuh interaksi user.");
+                });
                 document.getElementById("music-control").innerText = "🎵"; 
             }
             isPlaying = !isPlaying;
